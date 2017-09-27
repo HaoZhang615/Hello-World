@@ -12,74 +12,74 @@ class PictureGrabber:
 
         # first, set up 3 frames to order the widgets nicely
 
-        frame1 = Frame(master)
-        frame1.pack()
+        _frame1 = Frame(master)
+        _frame1.pack()
 
-        frame2 = Frame(master)
-        frame2.pack()
+        _frame2 = Frame(master)
+        _frame2.pack()
 
-        frame3 = Frame(master)
-        frame3.pack()
+        _frame3 = Frame(master)
+        _frame3.pack()
 
         # set the initial variable to empty string
-        self.outputDirname=""
-        self.inputDirname=""
+        self.output_dirname=""
+        self.input_dirname=""
 
         # initiate the string variable
-        self.Entry_Text1=StringVar()
-        self.Entry_Text1.set(self.outputDirname)
-        self.Entry_Text2=StringVar()
-        self.Entry_Text2.set(self.inputDirname)
+        self.entry_text1=StringVar()
+        self.entry_text1.set(self.output_dirname)
+        self.entry_text2=StringVar()
+        self.entry_text2.set(self.input_dirname)
 
-        # set the lay out of the entry and button widgets in their frame and bind the function calls, respectively
-        self.dirEntry = Entry(frame1,textvariable=self.Entry_Text1)
-        self.dirEntry.grid(row=0,column=0,sticky=W+E)
+        # set the layout of the entry and button widgets in their frame and bind the function calls, respectively
+        self.dir_entry = Entry(_frame1,textvariable=self.entry_text1)
+        self.dir_entry.grid(row=0,column=0,sticky=W+E)
 
-        self.dirBut = Button(frame1, text='select a folder to save the files...')
-        self.dirBut.bind("<Button-1>", self.askdirectory)
-        self.dirBut.grid(row=0,column=1,sticky=W+E)
+        self.dir_but = Button(_frame1, text='select a folder to save the files...')
+        self.dir_but.bind("<Button-1>", self.askdirectory)
+        self.dir_but.grid(row=0,column=1,sticky=E)
 
-        self.txtFileEntry = Entry(frame2,textvariable=self.Entry_Text2)
-        self.txtFileEntry.grid(row=1,column=0,sticky=W+E)
+        self.txt_file_entry = Entry(_frame2,textvariable=self.entry_text2)
+        self.txt_file_entry.grid(row=0,column=0,sticky=W+E)
 
-        self.txtFileBut = Button(frame2, text='select the TXT-file with URLs...')
-        self.txtFileBut.bind("<Button-1>", self.findtxtFile)
-        self.txtFileBut.grid(row=1,column=1,sticky=W+E)
+        self.txt_file_but = Button(_frame2, text='select the TXT-file with URLs...')
+        self.txt_file_but.bind("<Button-1>", self.find_txt_File)
+        self.txt_file_but.grid(row=0,column=1,sticky=E)
 
-        self.loadBut = Button(frame3, text='download the files and save')
+        self.loadBut = Button(_frame3, text='download the files and save')
         self.loadBut.bind("<Button-1>", self.load_file)
         self.loadBut.grid(columnspan=2)
 
     # a function to browse into a directory on local PC to save the pictures
     def askdirectory(self, event):
 
-        self.outputDirname = tkinter.filedialog.askdirectory()
+        self.output_dirname = tkinter.filedialog.askdirectory()
 
         # the selected folder is set to variable Entry_Text1
-        self.Entry_Text1.set(self.outputDirname)
+        self.entry_text1.set(self.output_dirname)
 
     # a function to browse into a directory on local PC to find the txt file with URLs
-    def findtxtFile(self, event):
+    def find_txt_File(self, event):
 
-        self.inputDirname = tkinter.filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
+        self.input_dirname = tkinter.filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
 
         # the selected folder is set to variable Entry_Text2
-        self.Entry_Text2.set(self.inputDirname)
+        self.entry_text2.set(self.input_dirname)
 
     # a function to execute the download and save the pictures in the selected directory
     def load_file(self, event):
         try:
-            with open(self.inputDirname) as f:
+            with open(self.input_dirname) as f:
                 for line in f:
                     # split the URL with the right most '/' in to 2 parts
                     fname = line.rsplit('/', 1)
 
                     # use the second part as the original file name, remove any spaces and newlines with str.strip()
                     # and give every picture a new full file adress
-                    fullfilename = os.path.join(self.Entry_Text1.get(), str.strip(fname[1]))
+                    full_filename = os.path.join(self.entry_text1.get(), str.strip(fname[1]))
 
                     # download!
-                    urlretrieve(line, fullfilename)
+                    urlretrieve(line, full_filename)
                 f.close()
         except Exception as ex:
 
@@ -90,6 +90,6 @@ class PictureGrabber:
 app = Tk()
 app.title('Picture Grabber')
 
-newFile= PictureGrabber(app)
+new_file= PictureGrabber(app)
 
 app.mainloop()
